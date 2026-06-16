@@ -39,8 +39,15 @@ const Features = () => {
         {
             featuresData.map((feature, index) => {
                 return (
-                    <div>
-                        {feature.title}
+                    <div key={index} className="border border-grey-300 p-4 rounded-2xl"> 
+                    {/* unique parameter rakhne key ma. icon component ho */}
+                      <div className="flex justify-center">
+                        <feature.icon className="h-10 w-10 text-yellow-500"/>
+                      </div>
+
+                      <h3 className="text-xl font-medium my-2 text-center underline">{feature.title}</h3>
+
+                      <p className="text-center">{feature.description}</p>
                     </div>
         )
         })}

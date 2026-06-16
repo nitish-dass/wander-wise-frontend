@@ -3,9 +3,9 @@ import CustomButton from "../shared/CustomButton";
 
 const Hero = () => {
   return (
-    <section className="relative">
+    <section className="relative top-20">
       <div className="h-[90vh] overflow-hidden flex items-center">
-        <img src="../public/hero1.jpg" alt="Wanderwise hero" className="w-full"/>
+        <img src="../public/hero.jpg" alt="Wanderwise hero" className="w-full"/>
       </div>
 
       <div className="bg-black opacity-60 h-[90vh] w-full absolute top-0"></div>
@@ -19,7 +19,9 @@ const Hero = () => {
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque repellat quibusdam voluptates sint ipsa. Laboriosam eligendi dolorem repellat rerum fugit cum sit molestias ipsam obcaecati quasi? Ab ex neque hic.
           </p>
 
-          <CustomButton text="Get Started" link="/login" />
+          <div className="flex justify-center">
+            <CustomButton text="Get Started" link="/login" />
+          </div>
         </div>
       </div>
     </section>

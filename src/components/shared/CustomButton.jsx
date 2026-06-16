@@ -1,7 +1,8 @@
+import { LogIn } from 'lucide-react';
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const CustomButton = ({text, color, link}) => {
+const CustomButton = ({text, color, link, isLogin}) => {
   
   const navigate = useNavigate();
 
@@ -12,8 +13,11 @@ const CustomButton = ({text, color, link}) => {
   }
   
   return (
-    <button onClick={handleClick} className='bg-blue-700 px-5 py-1.5 rounded-sm text-white cursor-pointer hover:bg-blue-400'>
+    <button onClick={handleClick} className='bg-blue-700 px-5 py-1.5 rounded-sm text-white cursor-pointer hover:bg-blue-400 flex items-center gap-2'>
         {text}
+        {
+         isLogin &&  <LogIn size={18} />
+        }
     </button>
   )
 }
