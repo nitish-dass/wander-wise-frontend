@@ -5,7 +5,7 @@ const Hero = () => {
   return (
     <section className="relative top-20">
       <div className="h-[90vh] overflow-hidden flex items-center">
-        <img src="../public/hero.jpg" alt="Wanderwise hero" className="w-full"/>
+        <img src="images/hero.jpg" alt="Wanderwise hero" className="w-full"/>
       </div>
 
       <div className="bg-black opacity-60 h-[90vh] w-full absolute top-0"></div>
