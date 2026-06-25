@@ -13,6 +13,8 @@ import { Field, FieldError, FieldLabel } from "../components/ui/field";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
+import { Toaster } from "../components/ui/sonner";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -34,9 +36,15 @@ const Login = () => {
     console.log(data);
   };
 
+  const handleClick = () => {
+    toast.success("Login successful", { position: "top-right" });
+  };
+
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <Card className="w-1/4 mx-auto mt-50">
+
+      <Toaster />
         <CardHeader>
           <CardTitle className="text-center text-3xl font-bold">
             Login
@@ -95,7 +103,7 @@ const Login = () => {
          </div>
         </CardContent>
         <CardFooter className="block">
-          <Button type="submit" className="w-full">
+          <Button onClick={handleClick} type="submit" className="w-full">
             Login
           </Button>
 

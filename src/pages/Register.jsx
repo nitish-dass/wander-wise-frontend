@@ -15,6 +15,8 @@ import { Field, FieldError, FieldLabel } from "../components/ui/field";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
+import { Toaster } from "../components/ui/sonner";
+import { toast } from "sonner";
 
 const formSchema = z
   .object({
@@ -34,6 +36,10 @@ const Register = () => {
   
   const [show, setShow] = React.useState(false);
   const [showConfirm, setShowConfirm] = React.useState(false);
+
+  const handleClick = () => {
+    toast.success("Register successful", { position: "top-right"});
+  };
   
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -52,6 +58,9 @@ const Register = () => {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <Card className="w-1/4 mx-auto mt-32">
+
+      <Toaster />
+      
         <CardHeader>
           <CardTitle>Register to WanderWise</CardTitle>
           <CardDescription>
@@ -156,7 +165,7 @@ const Register = () => {
           </div>
         </CardContent>
         <CardFooter className="block">
-          <Button types="submit" className="w-full">Register</Button>
+          <Button onClick={handleClick} types="submit" className="w-full">Register</Button>
 
           <div className="mt-2 text-center">
             Already have an account?
