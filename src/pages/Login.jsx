@@ -15,6 +15,9 @@ import { Button } from "../components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import { Toaster } from "../components/ui/sonner";
 import { toast } from "sonner";
+import api from "../api/axios";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -22,6 +25,11 @@ const formSchema = z.object({
 });
 
 const Login = () => {
+
+  const { login } = useAuth();
+
+  const navigate = useNavigate();
+
   const [show, setShow] = React.useState(false);
 
   const form = useForm({
@@ -34,17 +42,38 @@ const Login = () => {
 
   const onSubmit = (data) => {
     console.log(data);
+
+    try {
+      const login = api.post("/auth/login", data);
+
+      if(login.status === 200 ) {
+        toast.success("LoggedIn succesfully");
+
+        const token = login.data.token;
+
+        login(data, token);
+
+        navigate("/dashboard");
+      } else {
+        toast.error(login.message || "Login failed"); // backend error
+      }
+    } catch (error) {
+      toast.error(error.message || "Something went wrong"); // frontend error
+      console.log(error);    //before deploying sab console.log remove garnu parxa
+    }
+    
+
   };
 
-  const handleClick = () => {
-    toast.success("Login successful", { position: "top-right" });
-  };
+  // const handleClick = () => {
+  //   toast.success("Login successful", { position: "top-right" });
+  // };
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <Card className="w-1/4 mx-auto mt-50">
 
-      <Toaster />
+      {/* <Toaster /> */}
         <CardHeader>
           <CardTitle className="text-center text-3xl font-bold">
             Login
@@ -103,7 +132,8 @@ const Login = () => {
          </div>
         </CardContent>
         <CardFooter className="block">
-          <Button onClick={handleClick} type="submit" className="w-full">
+          {/* <Button onClick={handleClick} type="submit" className="w-full"> */}
+          <Button type="submit" className="w-full">
             Login
           </Button>
 
