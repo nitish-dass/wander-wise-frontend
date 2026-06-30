@@ -40,22 +40,26 @@ const Login = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
 
     try {
-      const login = api.post("/auth/login", data);
+      const loginResponse = await api.post("/auth/login", data);
 
-      if(login.status === 200 ) {
+      if(loginResponse.status === 200 ) {
         toast.success("LoggedIn succesfully");
 
-        const token = login.data.token;
+        console.log(loginResponse);
+
+        const token = loginResponse.data.data.token;
+
+        console.log("token is", token)
 
         login(data, token);
 
         navigate("/dashboard");
       } else {
-        toast.error(login.message || "Login failed"); // backend error
+        toast.error(loginResponse.message || "Login failed"); // backend error
       }
     } catch (error) {
       toast.error(error.message || "Something went wrong"); // frontend error
