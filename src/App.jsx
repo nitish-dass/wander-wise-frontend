@@ -8,6 +8,8 @@ import useAuth from './hooks/useAuth'
 import { jwtDecode } from 'jwt-decode'
 import AppLayout from './layouts/AppLayout'
 import Dashboard from './pages/Dashboard'
+import AddTrips from './pages/trips/AddTrips'
+import Trip from './pages/trips/Trip'
 
 const App = () => {
 
@@ -57,6 +59,8 @@ const App = () => {
       {/* routes to access after login are inserted here */}
 
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path='/trips' element={<Trip />} />
+        <Route path='/trips/add' element={<AddTrips />} />
 
       </Route>
     </Routes>
