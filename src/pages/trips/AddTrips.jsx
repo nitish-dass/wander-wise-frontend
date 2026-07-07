@@ -1,10 +1,10 @@
 import TripForm from '@/components/shared/TripForm'
 import React from 'react'
 
-const AddTrips = () => {
+const AddTrips = ({text}) => {
   return (
     <div>
-        <TripForm />
+        <TripForm text="Create"/>
     </div>
   )
 }

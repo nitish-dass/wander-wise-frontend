@@ -35,13 +35,13 @@ const tripFormSchema = z.object({
   budget: budgetSchema,
 });
 
-const TripForm = () => {
+const TripForm = ({text, tripData}) => {
 
   const navigate = useNavigate();
   
   const form = useForm({
     resolver: zodResolver(tripFormSchema),
-    defaultValues: {
+    defaultValues: tripData || {
       name: "",
       description: "",
       startDate: "",
@@ -77,12 +77,30 @@ const TripForm = () => {
     }
   };
 
+  // const onSubmit = async (tripFormData) => {
+  //   console.log(tripFormData);
+
+  //   try {
+  //     const response = await api.patch("/trips", tripFormData);
+
+  //     if(response.status === 200) {
+  //       toast.success("Trip updated successfully")
+        
+  //       navigate("/trips")
+  //     } else {
+  //       toast.error(response.message || "Unable to update Trip")
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.message || "Unable to update Trips ")
+  //   }
+  // };
+
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="min-h-screen">
       <Card className="w-1/3 mx-auto mt-40 mb-20">
         <CardHeader className="text-center">
           <CardTitle className="text-center text-2xl">
-            Create your trip
+            {text} your trip
           </CardTitle>
           <CardDescription>Fill in the details for your trip</CardDescription>
           {/* <CardAction>Card Action</CardAction> */}
