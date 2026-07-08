@@ -12,7 +12,7 @@ const useApi = (endpoint, options = {}, deps = []) => {
 
     api(endpoint, options)
       .then((res) => {
-        if (mounted) setData(res.data);
+        if (mounted) setData(res.data.data);
         // if (mounted) setData(res.data.data); yesle garda aru tira data.data repeat gari basnu pardaena 
       })
       .catch((err) => {

@@ -13,7 +13,6 @@ import { Field, FieldError, FieldLabel } from "../components/ui/field";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
-import { Toaster } from "../components/ui/sonner";
 import { toast } from "sonner";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";

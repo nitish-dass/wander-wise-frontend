@@ -35,7 +35,7 @@ const tripFormSchema = z.object({
   budget: budgetSchema,
 });
 
-const TripForm = ({text, tripData}) => {
+const TripForm = ({tripData}) => {
 
   const navigate = useNavigate();
   
@@ -44,8 +44,8 @@ const TripForm = ({text, tripData}) => {
     defaultValues: tripData || {
       name: "",
       description: "",
-      startDate: "",
-      endDate: "",
+      startDate: new Date().toISOString().split("t")[0],
+      endDate: new Date().toISOString().split("t")[0],
       destinations: [" "],
       budget: {
         total: "",
@@ -77,30 +77,30 @@ const TripForm = ({text, tripData}) => {
     }
   };
 
-  // const onSubmit = async (tripFormData) => {
-  //   console.log(tripFormData);
+  const onEdit = async (tripFormData) => {
+    console.log(tripFormData);
 
-  //   try {
-  //     const response = await api.patch("/trips", tripFormData);
+    try {
+      const response = await api.patch(`/trips/${tripData._id}`, tripFormData);
 
-  //     if(response.status === 200) {
-  //       toast.success("Trip updated successfully")
+      if(response.status === 200) {
+        toast.success("Trip updated successfully")
         
-  //       navigate("/trips")
-  //     } else {
-  //       toast.error(response.message || "Unable to update Trip")
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.message || "Unable to update Trips ")
-  //   }
-  // };
+        navigate("/trips")
+      } else {
+        toast.error(response.message || "Unable to update Trip")
+      }
+    } catch (error) {
+      toast.error(error.message || "Unable to update Trips ")
+    }
+  };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="min-h-screen">
+    <form onSubmit={form.handleSubmit(tripData ? onEdit : onSubmit)} className="min-h-screen">
       <Card className="w-1/3 mx-auto mt-40 mb-20">
         <CardHeader className="text-center">
           <CardTitle className="text-center text-2xl">
-            {text} your trip
+            {tripData ? "Edit your trip" : "Create a new Trip"}
           </CardTitle>
           <CardDescription>Fill in the details for your trip</CardDescription>
           {/* <CardAction>Card Action</CardAction> */}
@@ -264,7 +264,7 @@ const TripForm = ({text, tripData}) => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit">Submit</Button>
+          <Button type="submit">{tripData ? "Update Trip" : "Create Trip" }</Button>
         </CardFooter>
       </Card>
     </form>

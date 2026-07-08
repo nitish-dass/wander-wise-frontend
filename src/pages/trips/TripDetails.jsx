@@ -1,10 +1,11 @@
-import TripForm from '@/components/shared/TripForm'
 import useApi from '@/hooks/useApi';
 import { Loader2 } from 'lucide-react';
 import React from 'react'
 import { useParams } from 'react-router-dom'
 
-const EditTrips = () => {
+
+
+const TripDetails = () => {
 
     const {tripId} = useParams();
     console.log(tripId);
@@ -12,25 +13,20 @@ const EditTrips = () => {
     const {error, loading, data} = useApi(`/trips/${tripId}`);
 
     if(loading) {
-        return <Loader2 />
+        return <Loader2 className='animate-spin' />
     }
 
     if(error) {
         return <div>Error: {error.message}</div>
     }
 
-    const tripData = {
-        ...data,
-        startDate: data.startDate.split("T")[0],
-        endDate: data.endDate.split("T")[0]
-    }
-    
-
   return (
-    <div>
-        <TripForm tripData={tripData}/>
-    </div>
+    <section className='px-20 py-20 grid grid-cols-4 gap-4'>
+        <div className='col-span-3 border border-gray-300 rounded-lg p-4'>
+
+        </div>
+    </section>
   )
 }
 
-export default EditTrips
+export default TripDetails

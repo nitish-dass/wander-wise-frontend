@@ -47,7 +47,7 @@ const Trip = () => {
             {data.length == 0 ? (
               <div>No Trips available to show.</div>
             ) : (
-              data.data.map((trip) => {
+              data.map((trip) => {
                 return (
                   <Card>
                     <CardHeader>

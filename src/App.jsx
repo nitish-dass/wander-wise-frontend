@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard'
 import AddTrips from './pages/trips/AddTrips'
 import Trip from './pages/trips/Trip'
 import EditTrips from './pages/trips/EditTrips'
+import TripDetails from './pages/trips/TripDetails'
 
 const App = () => {
 
@@ -62,7 +63,9 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path='/trips' element={<Trip />} />
         <Route path='/trips/add' element={<AddTrips />} />
+        {/* dynanic path bala id last ma rakhne, navae sab lie id assume garera kam garxa */}
         <Route path='/trips/edit/:tripId' element={<EditTrips />} />
+        <Route path='/trips/:tripId' element={<TripDetails />} />   
 
       </Route>
     </Routes>
