@@ -27,7 +27,7 @@ const Trip = () => {
 
   if (loading) {
     //conditional rendering
-    return <Loader2 />;
+    return <Loader2  className="animate-spin"/>;
   }
 
   return (

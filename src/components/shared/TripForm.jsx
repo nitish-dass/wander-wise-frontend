@@ -35,10 +35,9 @@ const tripFormSchema = z.object({
   budget: budgetSchema,
 });
 
-const TripForm = ({tripData}) => {
-
+const TripForm = ({ tripData }) => {
   const navigate = useNavigate();
-  
+
   const form = useForm({
     resolver: zodResolver(tripFormSchema),
     defaultValues: tripData || {
@@ -65,15 +64,15 @@ const TripForm = ({tripData}) => {
     try {
       const response = await api.post("/trips", tripFormData);
 
-      if(response.status === 201) {
-        toast.success("Trip created successfully")
-        
-        navigate("/trips")
+      if (response.status === 201) {
+        toast.success("Trip created successfully");
+
+        navigate("/trips");
       } else {
-        toast.error(response.message || "Unable to create Trip")
+        toast.error(response.message || "Unable to create Trip");
       }
     } catch (error) {
-      toast.error(error.message || "Unable to create Trips ")
+      toast.error(error.message || "Unable to create Trips ");
     }
   };
 
@@ -83,20 +82,23 @@ const TripForm = ({tripData}) => {
     try {
       const response = await api.patch(`/trips/${tripData._id}`, tripFormData);
 
-      if(response.status === 200) {
-        toast.success("Trip updated successfully")
-        
-        navigate("/trips")
+      if (response.status === 200) {
+        toast.success("Trip updated successfully");
+
+        navigate("/trips");
       } else {
-        toast.error(response.message || "Unable to update Trip")
+        toast.error(response.message || "Unable to update Trip");
       }
     } catch (error) {
-      toast.error(error.message || "Unable to update Trips ")
+      toast.error(error.message || "Unable to update Trips ");
     }
   };
 
   return (
-    <form onSubmit={form.handleSubmit(tripData ? onEdit : onSubmit)} className="min-h-screen">
+    <form
+      onSubmit={form.handleSubmit(tripData ? onEdit : onSubmit)}
+      className="min-h-screen"
+    >
       <Card className="w-1/3 mx-auto mt-40 mb-20">
         <CardHeader className="text-center">
           <CardTitle className="text-center text-2xl">
@@ -190,36 +192,46 @@ const TripForm = ({tripData}) => {
           </div>
 
           <div className="border border-gray-300 rounded-lg p-4 y-4">
-             <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-2">
               <h3 className="text-lg font-medium">Destinations</h3>
-              <Button type="button" onClick={() => {append(" ")}} variant="outline" size="sm">Add Destination</Button>
-             </div>
-          {fields.map((item, index) => {
-            return (
-              <Controller
-              key = {index}
-                name={`destinations[${index}]`}
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>
-                      Destination {index + 1}
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id={field.name}
-                      type="text"
-                      placeholder="Kuta Beach"
-                      aria-invalid={fieldState.invalid}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-            );
-          })}
+              <Button
+                type="button"
+                onClick={() => {
+                  append(" ");
+                }}
+                variant="outline"
+                size="sm"
+              >
+                Add Destination
+              </Button>
+            </div>
+
+            {fields.map((item, index) => {
+              return (
+                <Controller
+                  key={index}
+                  name={`destinations[${index}]`}
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={field.name}>
+                        Destination {index + 1}
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        type="text"
+                        placeholder="Kuta Beach"
+                        aria-invalid={fieldState.invalid}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              );
+            })}
           </div>
 
           <div className="grid grid-cols-2 gap-4 border border-gray-300 rounded-lg p-4">
@@ -264,7 +276,9 @@ const TripForm = ({tripData}) => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit">{tripData ? "Update Trip" : "Create Trip" }</Button>
+          <Button type="submit">
+            {tripData ? "Update Trip" : "Create Trip"}
+          </Button>
         </CardFooter>
       </Card>
     </form>

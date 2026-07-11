@@ -22,7 +22,7 @@ const AppNavbar = () => {
             </nav>
 
             <div onClick={logout}>
-                <CustomButton text="Logout" />
+                <CustomButton text="Logout"  />
             </div>
 
         </div>
