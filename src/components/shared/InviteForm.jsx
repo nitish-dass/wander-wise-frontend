@@ -7,12 +7,14 @@ import { Button } from '../ui/button'
 import { Plus } from 'lucide-react'
 import { Field, FieldError, FieldLabel } from '../ui/field'
 import { Input } from '../ui/input'
+import api from '@/api/axios'
+import { toast } from 'sonner'
 
 const formSchema =z.object({
     collaboratorEmails: z.array(z.string().email("Invalid email address").min(5, "Must not be empty").min(1, "Atleast one email is required")),
 })
 
-const InviteForm = () => {
+const InviteForm = ({tripId}) => {
 
     const [dependency, setDependency] = React.useState(0);
 
@@ -30,6 +32,19 @@ const InviteForm = () => {
 
     const onSubmit = async (data) => {
         console.log(data);
+        try {
+          const response = await api.post(`/trips/${tripId}/invite`, data)
+
+          if(response.status === 200) {
+            toast.success("Invitation sent successfull");
+            form.reset();
+          } else {
+            toast.error( response.message || "Error sending Invitation")
+          }
+        } catch (error) {
+          toast.error( error.message ||  "Something went wron")
+          console.log(error)
+        }
     };
 
   return (

@@ -12,7 +12,9 @@ import AddTrips from './pages/trips/AddTrips'
 import Trip from './pages/trips/Trip'
 import EditTrips from './pages/trips/EditTrips'
 import TripDetails from './pages/trips/TripDetails'
-import TripDetailsShadcn from './pages/trips/demo'
+import AcceptInvite from './pages/trips/AcceptInvite'
+import Baggage from './pages/baggage/Baggage'
+import BaggageDetails from './pages/baggage/BaggageDetails'
 
 const App = () => {
 
@@ -66,8 +68,12 @@ const App = () => {
         <Route path='/trips/add' element={<AddTrips />} />
         {/* dynanic path bala id last ma rakhne, navae sab lie id assume garera kam garxa */}
         <Route path='/trips/edit/:tripId' element={<EditTrips />} />
+        <Route path='/trips/:tripId/invite/accept' element={<AcceptInvite />} />
         <Route path='/trips/:tripId' element={<TripDetails />} />   
-        {/* <Route path='/trips/:tripId' element={<TripDetailsShadcn />} />    */}
+
+        <Route path="/baggage" element={<Baggage />} />
+        <Route path="/baggage/:tripId" element={<BaggageDetails />} />
+
 
       </Route>
     </Routes>

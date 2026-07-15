@@ -400,6 +400,7 @@ const TripDetails = () => {
               {formatShortDate(trip.startDate)} —{" "}
               {formatShortDate(trip.endDate)}
             </CardFooter>
+            
           </Card>
         </div>
       </div>
@@ -429,7 +430,7 @@ const TripDetails = () => {
           </CardFooter>
         </Card>
 
-        <InviteForm />
+        <InviteForm tripId={tripId} />
       </div>
     </section>
   );

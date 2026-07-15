@@ -12,19 +12,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/formatter";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import api from "@/api/axios";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
-const Trip = () => {
+const Baggage = () => {
+
+    const navigate = useNavigate();
+
   const [dependency, setDependency] = React.useState(0);
 
   const { data, error, loading } = useApi("/trips", {}, [dependency]);
@@ -55,7 +50,7 @@ const Trip = () => {
       <Card>
         <CardHeader className="boarder-b">
           <CardTitle>Your Trips</CardTitle>
-          <CardDescription>Trips that you are part of:</CardDescription>
+          <CardDescription>Select any one trip to show baggages.</CardDescription>
           <CardAction>
             <a href="/trips/add">
               <Button type="button">Add Trip</Button>
@@ -75,32 +70,6 @@ const Trip = () => {
                       <CardDescription>
                         {formatDate(trip.startDate)}
                       </CardDescription>
-                      <CardAction>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger
-                            render={<Button variant="outline" size="icon" />}
-                          >
-                            <Ellipsis size={18} />
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            <DropdownMenuGroup>
-                              <DropdownMenuItem>
-                                <a href={`/trips/${trip._id}`}>View</a>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <a href={`/trips/edit/${trip._id}`}>Edit</a>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => {
-                                  handleDelete(trip._id);
-                                }}
-                              >
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuGroup>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </CardAction>
                     </CardHeader>
                     <CardContent>
                       <p>
@@ -110,19 +79,8 @@ const Trip = () => {
                         Spent: <span>{trip.budget.spent}</span>
                       </p>
                     </CardContent>
-                    <CardFooter className="flex flex-wrap gap-1 items-center">
-                      {trip.destinations.slice(0, 3).map((destination) => {
-                        return (
-                          <span className="bg-amber-50 px-2 py-1 capitalize rounded-sm text-sm whitespace-nowrap">
-                            {destination}
-                          </span>
-                        );
-                      })}
-                      {trip.destinations.length > 3 && (
-                        <span className="text-sm text-gray-500 font-bold">
-                          ...
-                        </span>
-                      )}
+                    <CardFooter>
+                      <Button type="button" onClick={() => {navigate(`/baggage/${trip._id}`)}} className="w-full">View Baggages</Button>
                     </CardFooter>
                   </Card>
                 );
@@ -138,4 +96,4 @@ const Trip = () => {
   );
 };
 
-export default Trip;
+export default Baggage;
