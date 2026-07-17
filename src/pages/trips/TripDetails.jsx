@@ -25,7 +25,6 @@ const TripDetails = () => {
 
   const { tripId } = useParams();
   console.log(tripId);
-
   const { error, loading, data } = useApi(`/trips/${tripId}`, {}, [dependency]);
 
   if (loading) {

@@ -3,7 +3,7 @@ import useApi from "@/hooks/useApi";
 import { Loader2, Pencil, Trash2 } from "lucide-react";
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Card,
@@ -14,10 +14,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import api from "@/api/axios";
+import { toast } from "sonner";
 
 const baggageSchema = z.object({
   name: z.string().min(3, "Item should be atleast 3 characters"),
-  completed: z.boolean(),
+  // completed: z.boolean(),
 });
 
 const BaggageDetails = () => {
@@ -30,11 +43,11 @@ const BaggageDetails = () => {
     dependency,
   ]);
 
-   const form = useForm({
+  const form = useForm({
     resolver: zodResolver(baggageSchema),
     defaultValues: {
       name: "",
-      completed: false,
+      // completed: false,
     },
   });
 
@@ -46,17 +59,80 @@ const BaggageDetails = () => {
     return <div>Error: {error.message}</div>;
   }
 
- 
+  const onSubmit = async (formData) => {
+    console.log(formData);
+
+    try {
+      const response = await api.post(`/${tripId}/baggages`, formData)
+       
+       if(response === 201) {
+        toast.success("Item added successfully")
+        
+        // setDependency(dependency + 1);
+       } else {
+        toast.error(response.message || "Unable to add item")
+       }
+    } catch (error) {
+      toast.error(error.message || "Unable to add item")
+      console.log(error)
+    }
+  };
 
   return (
-    <section>
+    <section className="mt-20 px-20 py-12">
       <Card>
         <CardHeader>
-          <CardTitle>Baggage List</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-2xl mt-1 font-bold">
+            Baggage List
+          </CardTitle>
+          <CardDescription className="mt-2 text-sm italic">
             All the items you need for this trip
           </CardDescription>
-          <CardAction>...</CardAction>
+          <CardAction>
+            <Dialog>
+              <DialogTrigger>Open</DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Are you absolutely sure?</DialogTitle>
+                  <DialogDescription>
+                    Add items in your baggage for this trip.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                  {/* <div>
+                    <Label htmlFor="name">Name</Label>
+                    <Input id="name" type="text" placeholder="Clothes" />
+                  </div> */}
+                  <Controller
+                    name="name"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor={field.name}>
+                          Enter Item Name
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          id={field.name}
+                          type="text"
+                          placeholder="Medicines"
+                          aria-invalid={fieldState.invalid}
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+
+                  <Button type="submit" className={"mt-4 w-full"}>
+                    Submit
+                  </Button>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </CardAction>
         </CardHeader>
         <CardContent>
           {!data?.length ? (
@@ -77,7 +153,7 @@ const BaggageDetails = () => {
                     <Checkbox checked={item.completed} />
 
                     <span
-                      className={`font-medium ${
+                      className={`capitalize font-medium ${
                         item.completed
                           ? "line-through text-muted-foreground"
                           : ""
@@ -89,19 +165,28 @@ const BaggageDetails = () => {
 
                   {/* Right Side */}
                   <div className="flex items-center gap-2">
-                    <button
+                    {/* <button
                       onClick={() => handleEdit(item)}
                       className="cursor-pointer"
                     >
                       <Pencil size={16} />
                     </button>
 
+                    html buttons
+
                     <button
                       onClick={() => handleDelete(item._id)}
                       className="cursor-pointer"
                     >
                       <Trash2 size={16} className="text-red-500" />
-                    </button>
+                    </button> */}
+
+                    <Button size="icon" variant="outline">
+                      <Pencil />
+                    </Button>
+                    <Button size="icon" variant="outline">
+                      <Trash2 />
+                    </Button>
                   </div>
                 </div>
               );
