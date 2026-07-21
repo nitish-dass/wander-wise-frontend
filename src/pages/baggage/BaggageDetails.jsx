@@ -65,10 +65,10 @@ const BaggageDetails = () => {
     try {
       const response = await api.post(`/${tripId}/baggages`, formData)
        
-       if(response === 201) {
+       if(response.status === 201) {
         toast.success("Item added successfully")
         
-        // setDependency(dependency + 1);
+        setDependency(dependency + 1);
        } else {
         toast.error(response.message || "Unable to add item")
        }
@@ -77,6 +77,38 @@ const BaggageDetails = () => {
       console.log(error)
     }
   };
+
+  const handleDelete = async(id) => {
+    try {
+      const deleteResponse = await api.delete(`/${tripId}/baggages/${id}`)
+
+      if(deleteResponse.status === 200 ) {
+        toast.success("Baggage deleted successfully")
+        
+        setDependency(dependency + 1)
+      } else {
+        toast.error(deleteResponse.message || "Failed to delete")
+      }
+    } catch (error) {
+      toast.error(error.message || "Failed to delete")
+    }
+  }
+
+  const onCheck = async(id, status, name) => {
+    try {
+      const checkResponse = await api.patch(`/${tripId}/baggages/${id}`, {completed: !status, name: name } )
+
+      if(checkResponse.status === 200 ) {
+        toast.success("Baggage updated successfully")
+        
+        setDependency(dependency + 1)
+      } else {
+        toast.error(checkResponse.message || "Failed to update")
+      }
+    } catch (error) {
+      toast.error(error.message || "Failed to update")
+    }
+  }
 
   return (
     <section className="mt-20 px-20 py-12">
@@ -126,7 +158,7 @@ const BaggageDetails = () => {
                     )}
                   />
 
-                  <Button type="submit" className={"mt-4 w-full"}>
+                  <Button setDependency={setDependency} type="submit" className={"mt-4 w-full"}>
                     Submit
                   </Button>
                 </form>
@@ -134,7 +166,7 @@ const BaggageDetails = () => {
             </Dialog>
           </CardAction>
         </CardHeader>
-        <CardContent>
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {!data?.length ? (
             <div className="py-40">
               No bagges for this trip. Add baggage with the help of button
@@ -146,11 +178,13 @@ const BaggageDetails = () => {
                 // display page garnu
                 <div
                   key={item._id}
-                  className="flex items-center justify-between rounded-lg border p-3"
+                  className={`${item.completed ? "bg-primary/30" : ""} flex items-center justify-between rounded-lg border p-3`}
                 >
                   {/* Left Side */}
                   <div className="flex items-center gap-3">
-                    <Checkbox checked={item.completed} />
+                    <Checkbox
+                    onClick={() => {onCheck(item._id, item.completed, item.name)}}
+                    checked={item.completed} />
 
                     <span
                       className={`capitalize font-medium ${
@@ -184,7 +218,12 @@ const BaggageDetails = () => {
                     <Button size="icon" variant="outline">
                       <Pencil />
                     </Button>
-                    <Button size="icon" variant="outline">
+                    <Button
+                    onClick={() => {handleDelete(item._id)}}
+                    setDependency={setDependency}
+                    size="icon"
+                    variant="outline"
+                    >
                       <Trash2 />
                     </Button>
                   </div>
