@@ -130,6 +130,8 @@ const TripForm = ({ tripData }) => {
               </Field>
             )}
           />
+
+          
           <Controller
             name="description"
             control={form.control}
