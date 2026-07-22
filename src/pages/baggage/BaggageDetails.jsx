@@ -35,6 +35,8 @@ const baggageSchema = z.object({
 
 const BaggageDetails = () => {
   const [dependency, setDependency] = React.useState(0);
+  const [editForm, setEditForm] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
 
   const { tripId } = useParams();
   console.log(tripId);
@@ -51,6 +53,14 @@ const BaggageDetails = () => {
     },
   });
 
+  React.useEffect(() => {
+    if (editForm) {
+      form.reset({
+        name: editForm.name,
+      });
+    }
+  }, [editForm, form]);
+
   if (loading) {
     return <Loader2 className="animate-spin" />;
   }
@@ -63,52 +73,77 @@ const BaggageDetails = () => {
     console.log(formData);
 
     try {
-      const response = await api.post(`/${tripId}/baggages`, formData)
-       
-       if(response.status === 201) {
-        toast.success("Item added successfully")
-        
+      const response = await api.post(`/${tripId}/baggages`, formData);
+
+      if (response.status === 201) {
+        toast.success("Item added successfully");
+
         setDependency(dependency + 1);
-       } else {
-        toast.error(response.message || "Unable to add item")
-       }
+      } else {
+        toast.error(response.message || "Unable to add item");
+      }
     } catch (error) {
-      toast.error(error.message || "Unable to add item")
-      console.log(error)
+      toast.error(error.message || "Unable to add item");
+      console.log(error);
     }
   };
 
-  const handleDelete = async(id) => {
+  const handleDelete = async (id) => {
     try {
-      const deleteResponse = await api.delete(`/${tripId}/baggages/${id}`)
+      const deleteResponse = await api.delete(`/${tripId}/baggages/${id}`);
 
-      if(deleteResponse.status === 200 ) {
-        toast.success("Baggage deleted successfully")
-        
-        setDependency(dependency + 1)
+      if (deleteResponse.status === 200) {
+        toast.success("Baggage deleted successfully");
+
+        setDependency(dependency + 1);
       } else {
-        toast.error(deleteResponse.message || "Failed to delete")
+        toast.error(deleteResponse.message || "Failed to delete");
       }
     } catch (error) {
-      toast.error(error.message || "Failed to delete")
+      toast.error(error.message || "Failed to delete");
     }
-  }
+  };
 
-  const onCheck = async(id, status, name) => {
+  const onCheck = async (id, status, name) => {
     try {
-      const checkResponse = await api.patch(`/${tripId}/baggages/${id}`, {completed: !status, name: name } )
+      const checkResponse = await api.patch(`/${tripId}/baggages/${id}`, {
+        completed: !status,
+        name: name,
+      });
 
-      if(checkResponse.status === 200 ) {
-        toast.success("Baggage updated successfully")
-        
-        setDependency(dependency + 1)
+      if (checkResponse.status === 200) {
+        toast.success("Baggage updated successfully");
+
+        setDependency(dependency + 1);
       } else {
-        toast.error(checkResponse.message || "Failed to update")
+        toast.error(checkResponse.message || "Failed to update");
       }
     } catch (error) {
-      toast.error(error.message || "Failed to update")
+      toast.error(error.message || "Failed to update");
     }
-  }
+  };
+
+  const onEdit = async (formData) => {
+    try {
+      const editResponse = await api.patch(
+        `/${tripId}/baggages/${editForm._id}`,
+        formData,
+      );
+
+      if (editResponse.status === 200) {
+        toast.success("Baggage renamed successfully");
+
+        setDependency((prev) => prev + 1);
+        form.reset();
+        setOpen(false);
+        setEditForm(null);
+      } else {
+        toast.error(editResponse.message || "Failed to rename baggage");
+      }
+    } catch (error) {
+      toast.error(error.message || "Failed to rename baggage");
+    }
+  };
 
   return (
     <section className="mt-20 px-20 py-12">
@@ -121,8 +156,20 @@ const BaggageDetails = () => {
             All the items you need for this trip
           </CardDescription>
           <CardAction>
-            <Dialog>
-              <DialogTrigger>Open</DialogTrigger>
+            <Dialog
+              open={open}
+              onOpenChange={(value) => {
+                setOpen(value);
+
+                if (!value) {
+                  setEditForm(null);
+                  form.reset({ name: "" });
+                }
+              }}
+            >
+              <DialogTrigger asChild>
+                <Button>Add Item</Button>
+              </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Are you absolutely sure?</DialogTitle>
@@ -131,7 +178,9 @@ const BaggageDetails = () => {
                   </DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={form.handleSubmit(onSubmit)}>
+                <form
+                  onSubmit={form.handleSubmit(editForm ? onEdit : onSubmit)}
+                >
                   {/* <div>
                     <Label htmlFor="name">Name</Label>
                     <Input id="name" type="text" placeholder="Clothes" />
@@ -158,8 +207,12 @@ const BaggageDetails = () => {
                     )}
                   />
 
-                  <Button setDependency={setDependency} type="submit" className={"mt-4 w-full"}>
-                    Submit
+                  <Button
+                    setDependency={setDependency}
+                    type="submit"
+                    className={"mt-4 w-full"}
+                  >
+                    {editForm ? "Rename" : "Submit"}
                   </Button>
                 </form>
               </DialogContent>
@@ -183,8 +236,11 @@ const BaggageDetails = () => {
                   {/* Left Side */}
                   <div className="flex items-center gap-3">
                     <Checkbox
-                    onClick={() => {onCheck(item._id, item.completed, item.name)}}
-                    checked={item.completed} />
+                      onClick={() => {
+                        onCheck(item._id, item.completed, item.name);
+                      }}
+                      checked={item.completed}
+                    />
 
                     <span
                       className={`capitalize font-medium ${
@@ -215,14 +271,24 @@ const BaggageDetails = () => {
                       <Trash2 size={16} className="text-red-500" />
                     </button> */}
 
-                    <Button size="icon" variant="outline">
+                    <Button
+                      onClick={() => {
+                        setEditForm(item);
+                        setOpen(true);
+                      }}
+                      size="icon"
+                      variant="outline"
+                    >
                       <Pencil />
                     </Button>
+
                     <Button
-                    onClick={() => {handleDelete(item._id)}}
-                    setDependency={setDependency}
-                    size="icon"
-                    variant="outline"
+                      onClick={() => {
+                        handleDelete(item._id);
+                      }}
+                      setDependency={setDependency}
+                      size="icon"
+                      variant="outline"
                     >
                       <Trash2 />
                     </Button>
